@@ -3,7 +3,7 @@ import json
 import os
 
 # Get paths of files to parse
-path = './filesToParse'
+path = './filesToParse/costume'
 filesToParse = []
 
 for files in os.walk(path):
@@ -19,11 +19,11 @@ def parse(filesToParse):
     wb = load_workbook(file)
     ws = wb[wb.sheetnames[0]]
         
-    members = []
+    costumes = []
 
     # Read properties
     props = []
-    for column in range(1, 8):
+    for column in range(1, 4):
       props.append(ws.cell(row=1, column=column).value)
 
     # Count number of rows
@@ -33,17 +33,15 @@ def parse(filesToParse):
 
     # Iterate cells and save into array
     for row in range(2, numOfRow):
-      newMember = {}
-      for column in range(0, 7):
+      newCos = {}
+      for column in range(0, 3):
         data = ws.cell(row=row, column=column+1).value
-        if(props[column]=='graduated'):
-          data = True if data == 1 else False
-        newMember[props[column]] = data
-      members.append(newMember)
+        newCos[props[column]] = data
+      costumes.append(newCos)
 
     # Write to json
     fileName = file.replace('.xlsx', '').replace(path+'/', '');
     with open('output/{}.json'.format(fileName), 'w') as output:
-      json.dump(members, output, ensure_ascii=False);
+      json.dump(costumes, output, ensure_ascii=False);
     
 parse(filesToParse)
